@@ -68,12 +68,14 @@ class App extends React.Component {
     }
 
     getAllFollowers = () => {
-        axios.get("http://localhost:9030/all-following?username=" + this.state.signInName)
+        const name=this.state.signInName
+        axios.get("http://localhost:9030/all-following?username=" + name)
             .then(response => {
                 this.setState({
                 followingList: response.data.allFollowing
                 })
             })
+        console.log(this.state.followingList)
     }
 
     follow=(name)=> { //נשאר להכניס בדיקה אם המשתמש עוקב כבר אחרי משתמש מסוים ולא לתת לו לעקוב אחריו שוב
