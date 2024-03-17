@@ -22,7 +22,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        return this.getAllFollowers
+        this.getAllFollowers();
     }
 
     enterText = (event, type) => {
@@ -66,7 +66,6 @@ class App extends React.Component {
         })
 
     }
-
     getAllFollowers = () => {
         const name=this.state.signInName
         axios.get("http://localhost:9030/all-following?username=" + name)
@@ -74,8 +73,9 @@ class App extends React.Component {
                 this.setState({
                 followingList: response.data.allFollowing
                 })
+            },()=>{
+                console.log(this.state.followingList)
             })
-        console.log(this.state.followingList)
     }
 
     follow=(name)=> { //נשאר להכניס בדיקה אם המשתמש עוקב כבר אחרי משתמש מסוים ולא לתת לו לעקוב אחריו שוב
