@@ -1,3 +1,19 @@
+body{
+  background-color: #71beff;
+  color: white;
+  padding: 20px;
+  font-family: Tahoma, serif;
+
+
+}
+
+.headline {
+  color: black;
+
+}
+
+
+
 .App {
   text-align: center;
 }

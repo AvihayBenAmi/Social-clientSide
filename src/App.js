@@ -44,7 +44,7 @@ class App extends React.Component {
         axios.get("http://localhost:9030/sign-in?username=" + this.state.signInName + "&password=" + this.state.signInPassword)
             .then(response => {
                 if (response.data.success) {
-                    alert("sign in is ok, youre redirecting to your dashboard!")
+                    alert("sign in is ok, you are redirecting to your dashboard!")
                     this.setState({isSignIn: true})
                     this.getAllFollowing()
                     this.showAllPosts()
@@ -81,7 +81,7 @@ class App extends React.Component {
     follow = (name) => {
         axios.get("http://localhost:9030/follow?username=" + this.state.signInName + "&name=" + name)
             .then(response => {
-                console.log(response.data)
+                console.log(response.data.success)
                 this.getAllFollowing();
                 this.showFeed()
             })
@@ -98,10 +98,11 @@ class App extends React.Component {
                     alert("Your post was published successfully")
                     this.showAllPosts()
                 } else {
+                    console.log(response.data.errorCode)
                     alert("that was fail to send your post. try again")
                 }
             })
-        this.setState({postToSend:""})
+        this.setState({postToSend: ""})
 
     }
 
@@ -109,7 +110,6 @@ class App extends React.Component {
         axios.get("http://localhost:9030/get-all-posts?username=" + this.state.signInName)
             .then(response => {
                 if (response.data.success) {
-                    alert("success")
                     this.setState({postsList: response.data.allPosts})
                     console.log(this.state.postsList.length)
                 } else {
@@ -130,7 +130,6 @@ class App extends React.Component {
             })
     }
 
-
     render() {
         return (
             <div className="App">
@@ -140,10 +139,10 @@ class App extends React.Component {
                             <h1> ברוכים הבאים לרשת החברתית - מחוברים</h1>
 
                             <h2>:להרשמה</h2>
-                            <label>Enter user name:</label>
+                            <label>Enter user name: </label>
                             <input type={"text"} onChange={(event) => this.enterText(event, "signUpName")}
                                    value={this.state.signUpName}/><br/>
-                            <label>Enter Password:</label>
+                            <label>Enter Password: </label>
                             <input type={"password"} onChange={(event) => this.enterText(event, "signUpPassword")}
                                    value={this.state.signUpPassword}/><br/><br/>
                             <button
@@ -152,10 +151,10 @@ class App extends React.Component {
                             </button>
 
                             <h2>:להתחברות</h2>
-                            <label>Enter user name:</label>
+                            <label>Enter user name: </label>
                             <input type={"text"} onChange={(event) => this.enterText(event, "signInName")}
                                    value={this.state.signInName}/><br/>
-                            <label>Enter Password:</label>
+                            <label>Enter Password: </label>
                             <input type={"password"} onChange={(event) => this.enterText(event, "signInPassword")}
                                    value={this.state.signInPassword}/><br/><br/>
                             <button
@@ -175,8 +174,8 @@ class App extends React.Component {
                                 </div>
                                 <div>
                                     <div>
-                                        <h2>Search for friends to follow: </h2>
-                                        <lable>type name or part of name: </lable>
+                                        <h2 className={"headline"}>Search for friends to follow: </h2>
+                                        <lable>type name or part of name:</lable>
                                         <input onChange={(event) => this.filterSearch(event)}/>
                                         <div>
                                             <lable>total result: {this.state.searchResult.length}</lable>
@@ -184,7 +183,8 @@ class App extends React.Component {
                                                 this.state.searchResult.map(item => {
                                                     return (
                                                         <div>
-                                                            {item.username}
+                                                            <span>{item.username}   </span>
+
                                                             <button disabled={this.isFollowExist(item.username)}
                                                                     onClick={() => this.follow(item.username)}
                                                                     value={item.username}>Follow
@@ -210,7 +210,8 @@ class App extends React.Component {
                                 </div>
                                 <div>
                                     <h2>Create New Post:</h2>
-                                    <input placeholder={"write your post"} onChange={(event) => this.enterText(event, "postToSend")}
+                                    <input placeholder={"write your post"}
+                                           onChange={(event) => this.enterText(event, "postToSend")}
                                            value={this.state.postToSend}/>
                                     <button disabled={this.state.postToSend.length === 0}
                                             onClick={() => this.sendPost()}>post
@@ -235,7 +236,7 @@ class App extends React.Component {
                                 </div>
                                 <div>
                                     <h3>Your Feed: {this.state.feed.length} last post shown
-                                    <button onClick={() => this.showFeed()}>Refresh</button></h3>
+                                        <button onClick={() => this.showFeed()}>Refresh</button></h3>
                                     <div>
                                         {
                                             this.state.feed.map(post => {
