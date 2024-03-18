@@ -197,7 +197,7 @@ class App extends React.Component {
                                     </div>
                                 </div>
                                 <div>
-                                    <h2>Your Followings: ({this.state.followingList.length})</h2>
+                                    <h2 className={"headline"}>Your Followings: ({this.state.followingList.length})</h2>
                                     {
                                         this.state.followingList.map(item => {
                                             return (
@@ -208,8 +208,9 @@ class App extends React.Component {
                                         })
                                     }
                                 </div>
+                                {/*<Posts postToSend={this.state.postToSend} enterText={()=>this.enterText()} sendPost={()=>this.sendPost()} postList={this.state.postsList}/>*/}
                                 <div>
-                                    <h2>Create New Post:</h2>
+                                    <h2 className={"headline"}>Create New Post: </h2>
                                     <input placeholder={"write your post"}
                                            onChange={(event) => this.enterText(event, "postToSend")}
                                            value={this.state.postToSend}/>
@@ -217,7 +218,7 @@ class App extends React.Component {
                                             onClick={() => this.sendPost()}>post
                                     </button>
                                     <div>
-                                        <h3>Your posts:({this.state.postsList.length})</h3>
+                                        <h3 className={"headline"}>Your posts: ({this.state.postsList.length})</h3>
                                         <div>
                                             {
                                                 this.state.postsList.map(post => {
@@ -234,24 +235,7 @@ class App extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <h3>Your Feed: {this.state.feed.length} last post shown
-                                        <button onClick={() => this.showFeed()}>Refresh</button></h3>
-                                    <div>
-                                        {
-                                            this.state.feed.map(post => {
-                                                return (
-                                                    <div>
-                                                        <h2>
-                                                            {post.post}
-                                                        </h2>
-                                                        <h6>by {post.username} at {post.time}</h6>
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                </div>
+                                <Feed feed={this.state.feed} showFeed={()=>this.showFeed()}/>
                             </div>
                         </div>
                 }
