@@ -15,7 +15,7 @@ function ImageInput() {
 
     return (
         <div>
-            <label>Upload or update your photo:</label><br/>
+            <label>Upload or update your profile photo:</label><br/>
             <input type="text" placeholder="enter your url photo adress" value={imageUrl} onChange={handleInputChange}/>
             <button onClick={handleButtonClick}>Upload</button>
             <br/>

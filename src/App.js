@@ -18,12 +18,10 @@ class App extends React.Component {
         searchInput: "",
         searchResult: [],
         followingList: [],
+        postToSend: "",
         postsList: [],
+        feed: []
     }
-
-    // componentDidMount=()=> {
-    //
-    // }
 
     enterText = (event, type) => {
         this.setState({[type]: event.target.value})
@@ -48,7 +46,9 @@ class App extends React.Component {
                 if (response.data.success) {
                     alert("sign in is ok, youre redirecting to your dashboard!")
                     this.setState({isSignIn: true})
-                    this.getAllFollowing();
+                    this.getAllFollowing()
+                    this.showAllPosts()
+                    this.showFeed()
                 } else {
                     alert("wrong user name or password, try again.")
                     this.setState({signInName: "", signInPassword: ""})
@@ -67,22 +67,23 @@ class App extends React.Component {
         })
     }
     getAllFollowing = () => {
-        const name=this.state.signInName
+        const name = this.state.signInName
         axios.get("http://localhost:9030/all-following?username=" + name)
             .then(response => {
                 this.setState({
-                followingList: response.data.allFollowing
+                    followingList: response.data.allFollowing
                 })
-            },()=>{
+            }, () => {
                 console.log(this.state.followingList)
             })
     }
 
-    follow=(name)=> { //נשאר להכניס בדיקה אם המשתמש עוקב כבר אחרי משתמש מסוים ולא לתת לו לעקוב אחריו שוב
+    follow = (name) => {
         axios.get("http://localhost:9030/follow?username=" + this.state.signInName + "&name=" + name)
             .then(response => {
                 console.log(response.data)
                 this.getAllFollowing();
+                this.showFeed()
             })
     }
 
@@ -90,15 +91,55 @@ class App extends React.Component {
         return this.state.followingList.some(item => item.username === name);
     }
 
+    sendPost = () => {
+        axios.get("http://localhost:9030/post?username=" + this.state.signInName + "&post=" + this.state.postToSend)
+            .then(response => {
+                if (response.data.success) {
+                    alert("Your post was published successfully")
+                    this.showAllPosts()
+                } else {
+                    alert("that was fail to send your post. try again")
+                }
+            })
+        this.setState({postToSend:""})
+
+    }
+
+    showAllPosts = () => {
+        axios.get("http://localhost:9030/get-all-posts?username=" + this.state.signInName)
+            .then(response => {
+                if (response.data.success) {
+                    alert("success")
+                    this.setState({postsList: response.data.allPosts})
+                    console.log(this.state.postsList.length)
+                } else {
+                    console.log(response.data.errorCode)
+                }
+            })
+    }
+
+    showFeed = () => {
+        axios.get("http://localhost:9030/show-feed?username=" + this.state.signInName)
+            .then(response => {
+                if (response.data.success) {
+                    this.setState({feed: response.data.feed})
+                    console.log(this.state.feed.length)
+                } else {
+                    console.log(response.data.errorCode)
+                }
+            })
+    }
+
+
     render() {
         return (
             <div className="App">
                 {
                     !this.state.isSignIn ?
                         <div>
-                            <h1>!ברוכים הבאים לרשת החברתית</h1>
+                            <h1> ברוכים הבאים לרשת החברתית - מחוברים</h1>
 
-                            <h2>Sign-up:</h2>
+                            <h2>:להרשמה</h2>
                             <label>Enter user name:</label>
                             <input type={"text"} onChange={(event) => this.enterText(event, "signUpName")}
                                    value={this.state.signUpName}/><br/>
@@ -110,7 +151,7 @@ class App extends React.Component {
                                 onClick={this.signUp}>Sign up
                             </button>
 
-                            <h2>Sign-in:</h2>
+                            <h2>:להתחברות</h2>
                             <label>Enter user name:</label>
                             <input type={"text"} onChange={(event) => this.enterText(event, "signInName")}
                                    value={this.state.signInName}/><br/>
@@ -122,27 +163,30 @@ class App extends React.Component {
                                 onClick={() => this.signIn()}>Sign in
                             </button>
                             <br/><br/>
+                            <h6>דוד אבן חיים, עומר חיון, אביחי נבון, עידן זקהיים ואביחי בן עמי</h6>
 
                         </div> :
                         <div>
                             <div>
-                                <h1>Hello {this.state.signInName}! Welcome to Your Dashboard:</h1>
+                                <h1>Hello {this.state.signInName}!</h1>
+                                <h2>Welcome to Your Dashboard:</h2>
                                 <div>
                                     <ImageInput/>
                                 </div>
                                 <div>
                                     <div>
-                                        <h2>Search for friends to follow:</h2>
-                                        <lable>type name or part of name:</lable>
+                                        <h2>Search for friends to follow: </h2>
+                                        <lable>type name or part of name: </lable>
                                         <input onChange={(event) => this.filterSearch(event)}/>
                                         <div>
-                                            <lable>total result:{this.state.searchResult.length}</lable>
+                                            <lable>total result: {this.state.searchResult.length}</lable>
                                             {
                                                 this.state.searchResult.map(item => {
                                                     return (
                                                         <div>
                                                             {item.username}
-                                                            <button disabled={this.isFollowExist(item.username)} onClick={() => this.follow(item.username)}
+                                                            <button disabled={this.isFollowExist(item.username)}
+                                                                    onClick={() => this.follow(item.username)}
                                                                     value={item.username}>Follow
                                                             </button>
                                                         </div>
@@ -153,8 +197,7 @@ class App extends React.Component {
                                     </div>
                                 </div>
                                 <div>
-                                    <h2>Your Followings:</h2>
-                                    <lable>total following:{this.state.followingList.length}</lable>
+                                    <h2>Your Followings: ({this.state.followingList.length})</h2>
                                     {
                                         this.state.followingList.map(item => {
                                             return (
@@ -166,10 +209,47 @@ class App extends React.Component {
                                     }
                                 </div>
                                 <div>
-                                <Posts username={this.state.signInName} postsList={this.state.postsList}/>
+                                    <h2>Create New Post:</h2>
+                                    <input placeholder={"write your post"} onChange={(event) => this.enterText(event, "postToSend")}
+                                           value={this.state.postToSend}/>
+                                    <button disabled={this.state.postToSend.length === 0}
+                                            onClick={() => this.sendPost()}>post
+                                    </button>
+                                    <div>
+                                        <h3>Your posts:({this.state.postsList.length})</h3>
+                                        <div>
+                                            {
+                                                this.state.postsList.map(post => {
+                                                    return (
+                                                        <div>
+                                                            <h2>
+                                                                {post.post}
+                                                            </h2>
+                                                            <h6>by me, at {post.time}</h6>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
-                                    <Feed/>
+                                    <h3>Your Feed: {this.state.feed.length} last post shown
+                                    <button onClick={() => this.showFeed()}>Refresh</button></h3>
+                                    <div>
+                                        {
+                                            this.state.feed.map(post => {
+                                                return (
+                                                    <div>
+                                                        <h2>
+                                                            {post.post}
+                                                        </h2>
+                                                        <h6>by {post.username} at {post.time}</h6>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
