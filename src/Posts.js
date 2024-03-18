@@ -31,6 +31,7 @@ function Posts(props) {
             })
     }
 
+
     return (
         <div>
             <h2>Create New Post:</h2>
@@ -38,12 +39,15 @@ function Posts(props) {
             <button onClick={() => sendPost()}>post</button>
             <div>
                 <h3>Your posts:</h3>
-                <div>{()=>showAllPosts()}</div>
+                <label>{postsList.length}</label>
+                <div>{() => showAllPosts()}</div>
                 {
-                    postsList.map(item=>{
-                        return(
+                    postsList.map(item => {
+                        return (
                             <div>
-                                {item.post}
+                                {
+                                    item.post
+                                }
                             </div>
                         )
                     })
@@ -53,5 +57,4 @@ function Posts(props) {
         </div>
     )
 }
-
 export default Posts
