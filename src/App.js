@@ -21,9 +21,9 @@ class App extends React.Component {
         postsList: [],
     }
 
-    componentDidMount() {
-        this.getAllFollowers();
-    }
+    // componentDidMount=()=> {
+    //
+    // }
 
     enterText = (event, type) => {
         this.setState({[type]: event.target.value})
@@ -48,6 +48,7 @@ class App extends React.Component {
                 if (response.data.success) {
                     alert("sign in is ok, youre redirecting to your dashboard!")
                     this.setState({isSignIn: true})
+                    this.getAllFollowing();
                 } else {
                     alert("wrong user name or password, try again.")
                     this.setState({signInName: "", signInPassword: ""})
@@ -64,9 +65,8 @@ class App extends React.Component {
                     })
                 })
         })
-
     }
-    getAllFollowers = () => {
+    getAllFollowing = () => {
         const name=this.state.signInName
         axios.get("http://localhost:9030/all-following?username=" + name)
             .then(response => {
@@ -82,7 +82,12 @@ class App extends React.Component {
         axios.get("http://localhost:9030/follow?username=" + this.state.signInName + "&name=" + name)
             .then(response => {
                 console.log(response.data)
+                this.getAllFollowing();
             })
+    }
+
+    isFollowExist = (name) => {
+        return this.state.followingList.some(item => item.username === name);
     }
 
     render() {
@@ -137,7 +142,7 @@ class App extends React.Component {
                                                     return (
                                                         <div>
                                                             {item.username}
-                                                            <button onClick={() => this.follow(item.username)}
+                                                            <button disabled={this.isFollowExist(item.username)} onClick={() => this.follow(item.username)}
                                                                     value={item.username}>Follow
                                                             </button>
                                                         </div>
@@ -161,7 +166,7 @@ class App extends React.Component {
                                     }
                                 </div>
                                 <div>
-                                <Posts/>
+                                <Posts username={this.state.signInName} postsList={this.state.postsList}/>
                                 </div>
                                 <div>
                                     <Feed/>
