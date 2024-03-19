@@ -15,11 +15,12 @@ function ImageInput() {
 
     return (
         <div>
-            <lable className={"headline"}>Upload or update your profile photo:</lable><br/>
+            <img id="image" style={{maxWidth: '200px', maxHeight: '200px'}}/>
+            <br/>
+            <lable className={"headline"}>Upload or update your profile photo:</lable>
+            <br/>
             <input type="text" placeholder="enter your url photo adress" value={imageUrl} onChange={handleInputChange}/>
             <button onClick={handleButtonClick}>Upload</button>
-            <br/>
-            <img id="image" style={{maxWidth: '200px', maxHeight: '200px'}}/>
         </div>
     );
 }

@@ -166,29 +166,32 @@ class App extends React.Component {
 
                         </div> :
                         <div>
-                            <div>
-                                <h1>Hello {this.state.signInName}!</h1>
-                                <h2>Welcome to Your Dashboard:</h2>
-                                <div>
+                            <h1>Hello {this.state.signInName}!</h1>
+                            <h2>Welcome to Your Dashboard:</h2>
+                            <div className={"container"}>
+                                <div className={"component"}>
                                     <ImageInput/>
                                 </div>
                                 <div>
-                                    <div>
+                                    <div className={"component"}>
                                         <h2 className={"headline"}>Search for friends to follow: </h2>
                                         <lable>type name or part of name:</lable>
-                                        <input onChange={(event) => this.filterSearch(event)}/>
+                                        <br/><br/>
+                                        <input onChange={(event) => this.filterSearch(event)}/><br/><br/>
                                         <div>
                                             <lable>total result: {this.state.searchResult.length}</lable>
+                                            <br/><br/>
                                             {
                                                 this.state.searchResult.map(item => {
                                                     return (
                                                         <div>
-                                                            <span>{item.username}   </span>
-
-                                                            <button disabled={this.isFollowExist(item.username)||this.state.signInName===item.username}
-                                                                    onClick={() => this.follow(item.username)}
-                                                                    value={item.username}>Follow
+                                                            <span>{item.username}  </span>
+                                                            <button
+                                                                disabled={this.isFollowExist(item.username) || this.state.signInName === item.username}
+                                                                onClick={() => this.follow(item.username)}
+                                                                value={item.username}>Follow
                                                             </button>
+                                                            <br/>
                                                         </div>
                                                     )
                                                 })
@@ -196,7 +199,7 @@ class App extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div>
+                                <div className={"component"}>
                                     <h2 className={"headline"}>Your Followings: ({this.state.followingList.length})</h2>
                                     {
                                         this.state.followingList.map(item => {
@@ -209,35 +212,37 @@ class App extends React.Component {
                                     }
                                 </div>
                                 {/*<Posts postToSend={this.state.postToSend} enterText={()=>this.enterText()} sendPost={()=>this.sendPost()} postList={this.state.postsList}/>*/}
-                                <div>
-                                    <h2 className={"headline"}>Create New Post: </h2>
-                                    <input placeholder={"write your post"}
-                                           onChange={(event) => this.enterText(event, "postToSend")}
-                                           value={this.state.postToSend}/>
-                                    <button disabled={this.state.postToSend.length === 0}
-                                            onClick={() => this.sendPost()}>post
-                                    </button>
-                                    <div>
-                                        <h3 className={"headline"}>Your posts: ({this.state.postsList.length})</h3>
-                                        <div>
-                                            {
-                                                this.state.postsList.map(post => {
-                                                    return (
-                                                        <div>
-                                                            <h2>
-                                                                {post.post}
-                                                            </h2>
-                                                            <h6>by me, at {post.time}</h6>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
+                                <div className={"container"}>
+                                    <div className={"component"}>
+                                        <h2 className={"headline"}>Create New Post: </h2>
+                                        <input placeholder={"write your post"}
+                                               onChange={(event) => this.enterText(event, "postToSend")}
+                                               value={this.state.postToSend}/>
+                                        <button disabled={this.state.postToSend.length === 0}
+                                                onClick={() => this.sendPost()}>post
+                                        </button>
+                                        <div className={"component"}>
+                                            <h3 className={"headline"}>Your posts: ({this.state.postsList.length})</h3>
+                                            <div>
+                                                {
+                                                    this.state.postsList.map(post => {
+                                                        return (
+                                                            <div>
+                                                                <h2>
+                                                                    {post.post}
+                                                                </h2>
+                                                                <h6>by me, at {post.time}</h6>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <Feed feed={this.state.feed} showFeed={()=>this.showFeed()}/>
+                                <Feed feed={this.state.feed} showFeed={() => this.showFeed()}/>
                             </div>
-                        </div>
+                        </div> //main div for dashboard
                 }
             </div>
         )

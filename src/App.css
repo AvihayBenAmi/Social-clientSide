@@ -12,6 +12,15 @@ body{
 
 }
 
+.container{
+  display: flex;
+}
+
+.component{
+  flex: 1;
+  margin: 20px;
+}
+
 
 
 .App {
