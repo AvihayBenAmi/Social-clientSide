@@ -185,7 +185,7 @@ class App extends React.Component {
                                                         <div>
                                                             <span>{item.username}   </span>
 
-                                                            <button disabled={this.isFollowExist(item.username)}
+                                                            <button disabled={this.isFollowExist(item.username)||this.state.signInName===item.username}
                                                                     onClick={() => this.follow(item.username)}
                                                                     value={item.username}>Follow
                                                             </button>
